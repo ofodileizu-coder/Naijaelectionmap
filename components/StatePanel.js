@@ -2,7 +2,19 @@
 import { PARTIES, OTHERS, ZONES } from "../lib/data";
 import { othersShare } from "../lib/engine";
 
-export default function StatePanel({ unit, entry, onShare, onTurnout, onQuick, onClear }) {
+const fmt = (n) => Math.round(n).toLocaleString("en-NG");
+
+export default function StatePanel({
+  unit,
+  entry,
+  registered,
+  votes,
+  nationalPct,
+  onShare,
+  onTurnoutPct,
+  onQuick,
+  onClear,
+}) {
   const oth = othersShare(entry.shares);
   const num = (v) => (v === "" ? 0 : parseFloat(v));
 
@@ -13,16 +25,30 @@ export default function StatePanel({ unit, entry, onShare, onTurnout, onQuick, o
         <span className="zone">{ZONES[unit.zone]}</span>
       </div>
 
+      <dl className="facts">
+        <div>
+          <dt>Registered voters</dt>
+          <dd>{fmt(registered)}</dd>
+        </div>
+        <div>
+          <dt>Votes cast</dt>
+          <dd>{fmt(votes)}</dd>
+        </div>
+      </dl>
+
       <label className="field">
-        <span>Votes cast</span>
+        <span>Turnout in this state (%)</span>
         <input
           type="number"
-          min="0"
-          step="10000"
-          value={entry.turnout}
-          onChange={(e) => onTurnout(Math.max(0, num(e.target.value) || 0))}
+          min="1"
+          max="100"
+          step="0.5"
+          placeholder={String(nationalPct)}
+          value={entry.turnoutPct ?? ""}
+          onChange={(e) => onTurnoutPct(e.target.value === "" ? null : Math.min(100, Math.max(1, num(e.target.value))))}
         />
       </label>
+      <p className="hint tight">Leave blank to use the national turnout ({nationalPct}%).</p>
 
       <div className="sliders">
         {PARTIES.map((p) => (
