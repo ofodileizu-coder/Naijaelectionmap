@@ -10,6 +10,7 @@ import {
   randomScenario,
   simulate,
   votesCast,
+  setLandslide,
 } from "../lib/engine";
 import { decodeScenario } from "../lib/share";
 import NigeriaMap from "../components/NigeriaMap";
@@ -19,6 +20,7 @@ import StatePanel from "../components/StatePanel";
 import Tools from "../components/Tools";
 import ShareBar from "../components/ShareBar";
 import SaveBar from "../components/SaveBar";
+import PaintTool from "../components/PaintTool";
 
 const KEY = "naija-election-map:v2";
 const blank = (entry) => ({ ...entry, shares: Object.fromEntries(Object.keys(entry.shares).map((k) => [k, 0])) });
@@ -30,6 +32,7 @@ function PageInner() {
   const [weights, setWeights] = useState(DEFAULT_WEIGHTS);
   const [sim, setSim] = useState(null);
   const [selected, setSelected] = useState("LA");
+  const [paint, setPaint] = useState(null);
   const [view, setView] = useState("leader");
   const [ready, setReady] = useState(false);
   const captureRef = useRef(null);
@@ -67,6 +70,13 @@ function PageInner() {
 
   const patch = (code, fn) => setData((d) => ({ ...d, [code]: fn(d[code]) }));
 
+  const selectOrPaint = (code) => {
+    setSelected(code);
+    if (paint) {
+      patch(code, (e) => (paint.pct === 25 ? withShare(e, paint.partyId, 25) : setLandslide(e, paint.partyId, paint.pct)));
+    }
+  };
+
   return (
     <main className="app">
       <header className="masthead">
@@ -80,12 +90,13 @@ function PageInner() {
 
       <div className="layout">
         <div className="col-map" ref={captureRef}>
-          <NigeriaMap results={results} selected={selected} onSelect={setSelected} view={view} />
+          <NigeriaMap results={results} selected={selected} onSelect={selectOrPaint} view={view} />
         </div>
 
         <div className="col-side">
           <Ranking results={results} view={view} onView={setView} />
           <ShareBar data={data} turnoutPct={turnoutPct} status={results.status} captureRef={captureRef} />
+          <PaintTool armed={paint} onArm={setPaint} />
           <SaveBar
             data={data}
             turnoutPct={turnoutPct}

@@ -4,9 +4,17 @@ import { STATE_PATHS, STATE_CENTROIDS, MAP_VIEWBOX } from "../lib/geo";
 
 const colorOf = (id) => (PARTIES.find((p) => p.id === id) || OTHERS).color;
 
+function minorDots(info) {
+  if (!info.entered) return [];
+  return PARTIES.filter((p) => p.id !== info.leader && (info.shares[p.id] || 0) >= THRESHOLD_PCT).map((p) => ({
+    id: p.id,
+    color: p.color,
+  }));
+}
+
 function describe(unit, info, view) {
   const style = {};
-  if (!info.entered) return { style, cls: "empty", label: "", aria: `${unit.name}: no data` };
+  if (!info.entered) return { style, cls: "empty", label: "", aria: `${unit.name}: no data`, minor: [] };
 
   if (view === "leader") {
     const strength = Math.min(1, 0.4 + info.margin / 50);
@@ -17,6 +25,7 @@ function describe(unit, info, view) {
       cls: (strength > 0.62 ? "dark " : "") + (info.leaderShare < THRESHOLD_PCT ? "thin" : ""),
       label: `${Math.round(info.leaderShare)}`,
       aria: `${unit.name}: ${info.leader} leads with ${info.leaderShare}%`,
+      minor: minorDots(info),
     };
   }
 
@@ -25,10 +34,10 @@ function describe(unit, info, view) {
   if (s >= THRESHOLD_PCT) {
     const strength = Math.min(1, 0.45 + (s - THRESHOLD_PCT) / 50);
     style["--mix"] = `${Math.round(strength * 100)}%`;
-    return { style, cls: strength > 0.62 ? "dark" : "", label: `${Math.round(s)}`, aria: `${unit.name}: ${view} ${s}%, above 25%` };
+    return { style, cls: strength > 0.62 ? "dark" : "", label: `${Math.round(s)}`, aria: `${unit.name}: ${view} ${s}%, above 25%`, minor: minorDots(info) };
   }
   style["--mix"] = "0%";
-  return { style, cls: "hatch", label: `${Math.round(s)}`, aria: `${unit.name}: ${view} ${s}%, below 25%` };
+  return { style, cls: "hatch", label: `${Math.round(s)}`, aria: `${unit.name}: ${view} ${s}%, below 25%`, minor: minorDots(info) };
 }
 
 export default function NigeriaMap({ results, selected, onSelect, view }) {
@@ -75,6 +84,17 @@ export default function NigeriaMap({ results, selected, onSelect, view }) {
                   {d.label}
                 </text>
               )}
+              {d.minor.map((m, i) => (
+                <circle
+                  key={m.id}
+                  cx={cx - ((d.minor.length - 1) * 14) / 2 + i * 14}
+                  cy={cy + 20}
+                  r={5}
+                  fill={m.color}
+                  stroke="#fff"
+                  strokeWidth={1}
+                />
+              ))}
             </g>
           );
         })}
