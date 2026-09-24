@@ -88,6 +88,9 @@ function PageInner() {
         <Verdict status={results.status} />
       </header>
 
+      {/* The main way to build a scenario: pick a party + share, then tap states below. */}
+      <PaintTool armed={paint} onArm={setPaint} />
+
       {/* Everything you need for one simulation, in view together. */}
       <div className="cockpit">
         <div className="col-map" ref={captureRef}>
@@ -114,7 +117,6 @@ function PageInner() {
       {/* Secondary tools -- share, paint, save, simulate. Scroll for these. */}
       <div className="extras">
         <ShareBar data={data} turnoutPct={turnoutPct} status={results.status} captureRef={captureRef} />
-        <PaintTool armed={paint} onArm={setPaint} />
         <SaveBar
           data={data}
           turnoutPct={turnoutPct}

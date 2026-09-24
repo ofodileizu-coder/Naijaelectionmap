@@ -1,5 +1,6 @@
 import { Bricolage_Grotesque, Source_Sans_3 } from "next/font/google";
 import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import Footer from "../components/Footer";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-display", display: "swap" });
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
             </SignedOut>
           </div>
           {children}
+          <Footer />
         </body>
       </html>
     </ClerkProvider>

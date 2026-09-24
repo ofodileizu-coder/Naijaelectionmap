@@ -10,10 +10,12 @@ export default function PaintTool({ armed, onArm }) {
 
   return (
     <section className="block" aria-label="Paint tool">
-      <h2>Paint tool</h2>
+      <h2>Fill states</h2>
       <p className="hint">
-        Pick a party and a share, then tap any state on the map to set it instantly -- no sliders needed. Tap
-        "25% marker" to just mark a party clearing the threshold without changing who's leading.
+        This is the fast way to build a map: pick a party and a share below, then tap states on the map to fill
+        them instantly -- like YAPms. A higher share (90%) leaves no room for anyone else to reach 25% there; a
+        lower one (75%) leaves some. Use "25% marker" to give a second party the threshold without taking the
+        lead. The panel on the right still lets you fine-tune any state by hand.
       </p>
 
       <div className="paint-row">

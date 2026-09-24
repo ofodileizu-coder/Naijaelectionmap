@@ -101,11 +101,8 @@ export default function NigeriaMap({ results, selected, onSelect, view }) {
       </svg>
       <p className="legend">
         {view === "leader"
-          ? "Colour is the state leader; a darker fill means a wider lead. A dashed edge marks a leader under 25%. The number is the leader's share."
-          : `Filled states are where ${view} reaches 25%. Hatched states fall short. The number is ${view}'s share.`}
-      </p>
-      <p className="credit">
-        State boundaries: <a href="https://www.geoboundaries.org" target="_blank" rel="noreferrer">geoBoundaries</a>, CC BY 4.0. Simplified; not for surveying or legal use.
+          ? "Darker = wider lead. Dashed edge = leader under 25%. Small dots = another party also clearing 25% there."
+          : `Filled = ${view} at 25%+. Hatched = below 25%.`}
       </p>
     </div>
   );
