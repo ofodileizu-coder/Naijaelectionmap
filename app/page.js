@@ -88,23 +88,13 @@ function PageInner() {
         <Verdict status={results.status} />
       </header>
 
-      <div className="layout">
+      {/* Everything you need for one simulation, in view together. */}
+      <div className="cockpit">
         <div className="col-map" ref={captureRef}>
           <NigeriaMap results={results} selected={selected} onSelect={selectOrPaint} view={view} />
         </div>
 
-        <div className="col-side">
-          <Ranking results={results} view={view} onView={setView} />
-          <ShareBar data={data} turnoutPct={turnoutPct} status={results.status} captureRef={captureRef} />
-          <PaintTool armed={paint} onArm={setPaint} />
-          <SaveBar
-            data={data}
-            turnoutPct={turnoutPct}
-            onLoad={(decoded) => {
-              setData(decoded.data);
-              setTurnoutPct(decoded.turnoutPct);
-            }}
-          />
+        <div className="col-editor">
           <StatePanel
             unit={unit}
             entry={entry}
@@ -116,36 +106,52 @@ function PageInner() {
             onQuick={(pid) => patch(selected, (e) => ({ ...e, shares: quickShares(pid) }))}
             onClear={() => patch(selected, blank)}
           />
-          <Tools
-            turnoutPct={turnoutPct}
-            onTurnoutPct={setTurnoutPct}
-            weights={weights}
-            onWeights={setWeights}
-            sim={sim}
-            onSimulate={() => setSim(simulate(weights, turnoutPct, 1000))}
-            onZone={(zone, pid) =>
-              setData((d) => {
-                const next = { ...d };
-                UNITS.filter((u) => u.zone === zone).forEach((u) => {
-                  next[u.code] = { ...d[u.code], shares: quickShares(pid) };
-                });
-                return next;
-              })
-            }
-            onRandom={() =>
-              setData((d) => {
-                const scenario = randomScenario(weights);
-                const next = { ...d };
-                UNITS.forEach((u) => (next[u.code] = { ...d[u.code], shares: scenario[u.code] }));
-                return next;
-              })
-            }
-            onReset={() => {
-              setData(emptyState());
-              setSim(null);
-            }}
-          />
         </div>
+      </div>
+
+      <Ranking results={results} view={view} onView={setView} />
+
+      {/* Secondary tools -- share, paint, save, simulate. Scroll for these. */}
+      <div className="extras">
+        <ShareBar data={data} turnoutPct={turnoutPct} status={results.status} captureRef={captureRef} />
+        <PaintTool armed={paint} onArm={setPaint} />
+        <SaveBar
+          data={data}
+          turnoutPct={turnoutPct}
+          onLoad={(decoded) => {
+            setData(decoded.data);
+            setTurnoutPct(decoded.turnoutPct);
+          }}
+        />
+        <Tools
+          turnoutPct={turnoutPct}
+          onTurnoutPct={setTurnoutPct}
+          weights={weights}
+          onWeights={setWeights}
+          sim={sim}
+          onSimulate={() => setSim(simulate(weights, turnoutPct, 1000))}
+          onZone={(zone, pid) =>
+            setData((d) => {
+              const next = { ...d };
+              UNITS.filter((u) => u.zone === zone).forEach((u) => {
+                next[u.code] = { ...d[u.code], shares: quickShares(pid) };
+              });
+              return next;
+            })
+          }
+          onRandom={() =>
+            setData((d) => {
+              const scenario = randomScenario(weights);
+              const next = { ...d };
+              UNITS.forEach((u) => (next[u.code] = { ...d[u.code], shares: scenario[u.code] }));
+              return next;
+            })
+          }
+          onReset={() => {
+            setData(emptyState());
+            setSim(null);
+          }}
+        />
       </div>
     </main>
   );
