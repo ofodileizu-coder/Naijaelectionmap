@@ -10,6 +10,7 @@ import {
   randomScenario,
   votesCast,
   setLandslide,
+  setSecondShare,
 } from "../lib/engine";
 import { decodeScenario } from "../lib/share";
 import NigeriaMap from "../components/NigeriaMap";
@@ -71,7 +72,7 @@ function PageInner() {
   const selectOrPaint = (code) => {
     setSelected(code);
     if (paint) {
-      patch(code, (e) => (paint.pct === 25 ? withShare(e, paint.partyId, 25) : setLandslide(e, paint.partyId, paint.pct)));
+      patch(code, (e) => (paint.pct < 33 ? setSecondShare(e, paint.partyId, paint.pct) : setLandslide(e, paint.partyId, paint.pct)));
     }
   };
 

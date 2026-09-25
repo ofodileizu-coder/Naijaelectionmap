@@ -79,20 +79,23 @@ export default function NigeriaMap({ results, selected, onSelect, view }) {
             >
               <title>{u.name}</title>
               <path d={STATE_PATHS[u.code]} />
+              <text className="st-code" x={cx} y={d.label ? cy - 8 : cy} textAnchor="middle" dominantBaseline="middle">
+                {u.code}
+              </text>
               {d.label && (
-                <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
+                <text className="st-val" x={cx} y={cy + 10} textAnchor="middle" dominantBaseline="middle">
                   {d.label}
                 </text>
               )}
               {d.minor.map((m, i) => (
                 <circle
                   key={m.id}
-                  cx={cx - ((d.minor.length - 1) * 14) / 2 + i * 14}
-                  cy={cy + 20}
-                  r={5}
+                  cx={cx - ((d.minor.length - 1) * 26) / 2 + i * 26}
+                  cy={cy + 34}
+                  r={11}
                   fill={m.color}
                   stroke="#fff"
-                  strokeWidth={1}
+                  strokeWidth={2.5}
                 />
               ))}
             </g>
