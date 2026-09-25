@@ -8,7 +8,6 @@ import {
   withShare,
   quickShares,
   randomScenario,
-  simulate,
   votesCast,
   setLandslide,
 } from "../lib/engine";
@@ -22,7 +21,7 @@ import ShareBar from "../components/ShareBar";
 import SaveBar from "../components/SaveBar";
 import PaintTool from "../components/PaintTool";
 
-const KEY = "naija-election-map:v2";
+const KEY = "naija-election-map:v3";
 const blank = (entry) => ({ ...entry, shares: Object.fromEntries(Object.keys(entry.shares).map((k) => [k, 0])) });
 
 function PageInner() {
@@ -30,7 +29,6 @@ function PageInner() {
   const [data, setData] = useState(emptyState);
   const [turnoutPct, setTurnoutPct] = useState(DEFAULT_TURNOUT_PCT);
   const [weights, setWeights] = useState(DEFAULT_WEIGHTS);
-  const [sim, setSim] = useState(null);
   const [selected, setSelected] = useState("LA");
   const [paint, setPaint] = useState(null);
   const [view, setView] = useState("leader");
@@ -114,7 +112,7 @@ function PageInner() {
 
       <Ranking results={results} view={view} onView={setView} />
 
-      {/* Secondary tools -- share, paint, save, simulate. Scroll for these. */}
+      {/* Secondary tools -- share, save, scenario builders. Scroll for these. */}
       <div className="extras">
         <ShareBar data={data} turnoutPct={turnoutPct} status={results.status} captureRef={captureRef} />
         <SaveBar
@@ -130,8 +128,6 @@ function PageInner() {
           onTurnoutPct={setTurnoutPct}
           weights={weights}
           onWeights={setWeights}
-          sim={sim}
-          onSimulate={() => setSim(simulate(weights, turnoutPct, 1000))}
           onZone={(zone, pid) =>
             setData((d) => {
               const next = { ...d };
@@ -149,10 +145,7 @@ function PageInner() {
               return next;
             })
           }
-          onReset={() => {
-            setData(emptyState());
-            setSim(null);
-          }}
+          onReset={() => setData(emptyState())}
         />
       </div>
     </main>

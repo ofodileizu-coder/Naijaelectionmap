@@ -2,17 +2,7 @@
 import { useState } from "react";
 import { PARTIES, ZONES } from "../lib/data";
 
-export default function Tools({
-  turnoutPct,
-  onTurnoutPct,
-  weights,
-  onWeights,
-  sim,
-  onSimulate,
-  onZone,
-  onRandom,
-  onReset,
-}) {
+export default function Tools({ turnoutPct, onTurnoutPct, weights, onWeights, onRandom, onReset, onZone }) {
   const [party, setParty] = useState(PARTIES[0].id);
   const total = PARTIES.reduce((a, p) => a + (weights[p.id] || 0), 0) || 1;
 
@@ -56,37 +46,10 @@ export default function Tools({
         <button type="button" className="btn" onClick={onRandom}>
           Random scenario
         </button>
-        <button type="button" className="btn" onClick={onSimulate}>
-          Run 1,000 simulations
-        </button>
         <button type="button" className="btn ghost" onClick={onReset}>
           Clear all
         </button>
       </div>
-
-      {sim && (
-        <div className="sim" role="status">
-          <h3>{sim.runs.toLocaleString("en-NG")} simulated elections</h3>
-          <ul>
-            {PARTIES.map((p) => (
-              <li key={p.id} style={{ "--c": p.color }}>
-                <span className="chip on static">{p.id}</span>
-                <span>wins in round one</span>
-                <b>{sim.elected[p.id].toFixed(1)}%</b>
-              </li>
-            ))}
-            <li>
-              <span className="chip static">Runoff</span>
-              <span>no first-round winner</span>
-              <b>{sim.runoff.toFixed(1)}%</b>
-            </li>
-          </ul>
-          <p className="hint tight">
-            Each run gives every region a random swing, then draws each state's leader from the chances above. It
-            illustrates the 25%-in-24-states rule and is not a forecast.
-          </p>
-        </div>
-      )}
 
       <h3>Give a party a whole zone</h3>
       <div className="zonerow">

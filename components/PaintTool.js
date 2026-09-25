@@ -2,75 +2,69 @@
 import { useState } from "react";
 import { PARTIES } from "../lib/data";
 
-const LANDSLIDES = [75, 80, 85, 90];
+const SHARES = [75, 80, 85, 90];
 
+// A compact toolbar: pick a party and it's ready to fill. Tap states on the map.
 export default function PaintTool({ armed, onArm }) {
-  const [party, setParty] = useState(PARTIES[0].id);
   const [pct, setPct] = useState(80);
 
-  return (
-    <section className="block" aria-label="Paint tool">
-      <h2>Fill states</h2>
-      <p className="hint">
-        This is the fast way to build a map: pick a party and a share below, then tap states on the map to fill
-        them instantly -- like YAPms. A higher share (90%) leaves no room for anyone else to reach 25% there; a
-        lower one (75%) leaves some. Use "25% marker" to give a second party the threshold without taking the
-        lead. The panel on the right still lets you fine-tune any state by hand.
-      </p>
+  const pickParty = (id) => onArm(armed?.partyId === id ? null : { partyId: id, pct });
+  const pickPct = (v) => {
+    setPct(v);
+    if (armed) onArm({ ...armed, pct: v });
+  };
 
-      <div className="paint-row">
-        <span>Party</span>
+  return (
+    <section className="block filler" aria-label="Fill states">
+      <div className="filler-row">
+        <span className="filler-label">Fill with</span>
         {PARTIES.map((p) => (
           <button
             key={p.id}
             type="button"
-            className={`chip${party === p.id ? " on" : ""}`}
+            className={`chip chip-wide${armed?.partyId === p.id ? " on" : ""}`}
             style={{ "--c": p.color }}
-            onClick={() => setParty(p.id)}
-            aria-pressed={party === p.id}
+            onClick={() => pickParty(p.id)}
+            aria-pressed={armed?.partyId === p.id}
           >
             {p.id}
           </button>
         ))}
-      </div>
 
-      <div className="paint-row">
-        <span>Landslide</span>
-        {LANDSLIDES.map((v) => (
+        <span className="filler-label">Share</span>
+        {SHARES.map((v) => (
           <button
             key={v}
             type="button"
-            className={`chip pct${pct === v ? " on" : ""}`}
-            onClick={() => setPct(v)}
+            className={`chip chip-pct${pct === v ? " on" : ""}`}
+            onClick={() => pickPct(v)}
             aria-pressed={pct === v}
           >
             {v}%
           </button>
         ))}
-        <button type="button" className={`chip pct${pct === 25 ? " on" : ""}`} onClick={() => setPct(25)} aria-pressed={pct === 25}>
-          25% marker
+        <button
+          type="button"
+          className={`chip chip-pct${pct === 25 ? " on" : ""}`}
+          onClick={() => pickPct(25)}
+          aria-pressed={pct === 25}
+        >
+          25% only
         </button>
-      </div>
 
-      <div className="paint-row">
-        {armed ? (
-          <button type="button" className="btn" onClick={() => onArm(null)}>
-            Stop painting
-          </button>
-        ) : (
-          <button type="button" className="btn" onClick={() => onArm({ partyId: party, pct })}>
-            Start painting {party} at {pct}%
+        {armed && (
+          <button type="button" className="btn small ghost" onClick={() => onArm(null)}>
+            Done
           </button>
         )}
       </div>
-
-      {armed && (
-        <p className="paint-armed">
-          {armed.pct === 25
-            ? `Tap a state to mark ${armed.partyId} clearing 25% there.`
-            : `Tap a state to set ${armed.partyId} to ${armed.pct}% there.`}
-        </p>
-      )}
+      <p className="hint tight">
+        {armed
+          ? armed.pct === 25
+            ? `Tap a state to give ${armed.partyId} 25% there without changing the leader.`
+            : `Tap states to fill them with ${armed.partyId} at ${armed.pct}%.`
+          : "Pick a party, then tap states on the map. 90% leaves no one else room for 25%; 75% does."}
+      </p>
     </section>
   );
 }

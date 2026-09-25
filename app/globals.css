@@ -20,10 +20,10 @@ h1, h2 { font-family: var(--font-display), system-ui, sans-serif; margin: 0; let
 button, input { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
-.app { max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px; }
+.app { max-width: 1360px; margin: 0 auto; padding: 20px 16px 48px; }
 
 /* Masthead */
-.masthead h1 { font-size: clamp(1.9rem, 4.5vw, 3rem); font-weight: 700; line-height: 1.05; }
+.masthead h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; line-height: 1.05; }
 .masthead p { margin: 8px 0 14px; max-width: 62ch; color: var(--muted); }
 .verdict {
   padding: 12px 14px;
@@ -38,18 +38,18 @@ button, input { font: inherit; color: inherit; }
 .verdict.live { border-color: #1f5fbf; }
 
 /* Cockpit: map + state editor, sized to fit one screen together */
-.cockpit { display: grid; gap: 20px; margin-top: 18px; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: start; }
+.cockpit { display: grid; gap: 20px; margin-top: 14px; grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); align-items: start; }
 .col-map { display: flex; flex-direction: column; min-height: 320px; }
-.col-map svg.nigeria-map { max-height: 58vh; width: 100%; height: auto; object-fit: contain; margin: 0 auto; display: block; }
+.col-map svg.nigeria-map { max-height: 74vh; width: 100%; height: auto; object-fit: contain; margin: 0 auto; display: block; }
 .col-map .legend { flex-shrink: 0; margin: 10px 0 0; }
-.col-editor { max-height: 64vh; overflow-y: auto; }
+.col-editor { max-height: 74vh; overflow-y: auto; }
 .col-editor .block { height: 100%; box-sizing: border-box; }
 @media (max-width: 860px) {
   .cockpit { grid-template-columns: minmax(0, 1fr); }
   .col-map, .col-editor { max-height: none; }
 }
 
-/* Extras: share / paint / save / simulate -- below the fold on purpose */
+/* Extras: share / save / scenario builders -- below the fold on purpose */
 .extras { display: grid; gap: 20px; margin-top: 24px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 @media (max-width: 860px) { .extras { grid-template-columns: minmax(0, 1fr); } }
 
@@ -105,13 +105,16 @@ button, input { font: inherit; color: inherit; }
   background: transparent;
   color: var(--ink);
   border-radius: 999px;
-  padding: 2px 12px;
+  padding: 4px 22px;
   font-weight: 700;
   cursor: pointer;
-  min-height: 30px;
+  min-height: 26px;
+  min-width: 84px;
+  text-align: center;
+  letter-spacing: 0.01em;
 }
 .chip.on { background: var(--c, var(--ink)); color: #fff; }
-.chip.static { cursor: default; min-width: 64px; text-align: center; }
+.chip.static { cursor: default; min-width: 84px; text-align: center; }
 .btn {
   border: 1.5px solid var(--ink);
   background: var(--ink);
@@ -155,11 +158,6 @@ button, input { font: inherit; color: inherit; }
 .field.stack { flex-direction: column; align-items: stretch; gap: 6px; margin-top: 14px; margin-bottom: 0; }
 .field.stack input[type="range"] { width: 100%; }
 .block h3 { font-family: var(--font-display), sans-serif; font-size: 1rem; margin: 18px 0 8px; letter-spacing: -0.01em; }
-.sim { margin-top: 16px; padding: 12px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); }
-.sim h3 { margin-top: 0; }
-.sim ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.sim li { display: grid; grid-template-columns: 76px 1fr auto; gap: 10px; align-items: center; }
-.sim li b { font-variant-numeric: tabular-nums; }
 
 /* Real map (SVG state shapes) */
 .nigeria-map { width: 100%; height: auto; display: block; }
@@ -193,7 +191,7 @@ button, input { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) { .nigeria-map .state path { transition: none; } }
 
 /* Top bar (Clerk account control) */
-.topbar { display: flex; justify-content: flex-end; padding: 10px 16px 0; max-width: 1180px; margin: 0 auto; }
+.topbar { display: flex; justify-content: flex-end; padding: 10px 16px 0; max-width: 1360px; margin: 0 auto; }
 
 /* Save-to-account list */
 .zonerow .save-input { flex: 1; min-width: 140px; padding: 6px 8px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
@@ -207,14 +205,22 @@ button, input { font: inherit; color: inherit; }
 /* Paint tool */
 .paint-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
 .paint-row > span { color: var(--muted); font-size: 0.9rem; min-width: 64px; }
-.chip.pct { min-width: 52px; }
 .paint-armed { margin-top: 12px; padding: 8px 10px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); font-size: 0.9rem; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 
 /* Footer */
 .site-footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 20px 16px 28px; }
-.footer-inner { max-width: 1180px; margin: 0 auto; }
+.footer-inner { max-width: 1360px; margin: 0 auto; }
 .footer-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; font-weight: 600; }
 .footer-nav { display: flex; gap: 16px; }
 .footer-nav a { color: var(--ink); text-decoration: none; }
 .footer-nav a:hover { text-decoration: underline; }
 .footer-credit { margin: 10px 0 0; color: var(--muted); font-size: 0.82rem; max-width: 90ch; }
+
+/* Compact fill toolbar */
+.filler { margin-top: 14px; padding: 10px 14px; }
+.filler-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.filler-label { color: var(--muted); font-size: 0.85rem; margin-left: 6px; }
+.filler-label:first-child { margin-left: 0; }
+.filler .hint.tight { margin: 8px 0 0; }
+.chip-wide { min-width: 104px; min-height: 26px; padding: 1px 22px; font-size: 0.9rem; line-height: 1.3; }
+.chip-pct { min-width: 56px; min-height: 26px; padding: 1px 12px; font-size: 0.85rem; line-height: 1.3; text-align: center; }
