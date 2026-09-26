@@ -56,9 +56,9 @@ export default function PaintTool({ armed, onArm }) {
       <p className="hint tight">
         {armed
           ? pct < 33
-            ? `Tap a state to give ${armed.partyId} ${pct}% there without taking the lead. Fill the winner first.`
-            : `Tap states to make ${armed.partyId} win them with ${pct}%.`
-          : "Pick a party, then tap states on the map. Winner shares split the rest between the other two parties."}
+            ? `Click a state to give ${armed.partyId} ${pct}% there as the runner-up. Colour in the winner first.`
+            : `Click states to make ${armed.partyId} win them with ${pct}% of the vote.`
+          : "Choose a party and a percentage, then click states on the map to colour them in. The party you choose wins that state, and the remaining votes are shared between the other two parties."}
       </p>
     </section>
   );
