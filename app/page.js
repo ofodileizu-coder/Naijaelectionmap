@@ -105,8 +105,8 @@ function PageInner() {
             nationalPct={turnoutPct}
             onShare={(pid, v) => patch(selected, (e) => withShare(e, pid, v))}
             onTurnoutPct={(v) => patch(selected, (e) => ({ ...e, turnoutPct: v }))}
-            onQuick={(pid) => patch(selected, (e) => ({ ...e, shares: quickShares(pid) }))}
             onClear={() => patch(selected, blank)}
+            results={results}
           />
         </div>
       </div>
