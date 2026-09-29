@@ -12,6 +12,7 @@ export default function StatePanel({
   onShare,
   onTurnoutPct,
   onClear,
+  onClearAll,
   results,
 }) {
   const num = (v) => (v === "" ? 0 : parseFloat(v));
@@ -66,6 +67,15 @@ export default function StatePanel({
 
       <button type="button" className="btn clear-state" onClick={onClear}>
         Clear {unit.name}
+      </button>
+      <button
+        type="button"
+        className="btn clear-state clear-all"
+        onClick={() => {
+          if (window.confirm("Clear every state on the map? This can't be undone.")) onClearAll();
+        }}
+      >
+        Clear whole map
       </button>
     </section>
   );

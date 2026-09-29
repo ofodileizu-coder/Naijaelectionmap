@@ -107,6 +107,7 @@ function PageInner() {
             onTurnoutPct={(v) => patch(selected, (e) => ({ ...e, turnoutPct: v }))}
             onClear={() => patch(selected, blank)}
             results={results}
+            onClearAll={() => setData(emptyState())}
           />
         </div>
       </div>
