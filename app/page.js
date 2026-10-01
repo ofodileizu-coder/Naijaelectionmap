@@ -1,163 +1,33 @@
-"use client";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { UNITS, REGISTERED_VOTERS, DEFAULT_TURNOUT_PCT, DEFAULT_WEIGHTS } from "../lib/data";
-import {
-  emptyState,
-  computeResults,
-  withShare,
-  quickShares,
-  randomScenario,
-  votesCast,
-  setLandslide,
-  setSecondShare,
-} from "../lib/engine";
-import { decodeScenario } from "../lib/share";
-import NigeriaMap from "../components/NigeriaMap";
-import Ranking from "../components/Ranking";
-import Verdict from "../components/Verdict";
-import StatePanel from "../components/StatePanel";
-import Tools from "../components/Tools";
-import ShareBar from "../components/ShareBar";
-import SaveBar from "../components/SaveBar";
-import PaintTool from "../components/PaintTool";
+import Link from "next/link";
+import MapApp from "../components/MapApp";
+import { ELECTION_DATE_TEXT } from "../lib/site";
 
-const KEY = "naija-election-map:v3";
-const blank = (entry) => ({ ...entry, shares: Object.fromEntries(Object.keys(entry.shares).map((k) => [k, 0])) });
+export const metadata = { alternates: { canonical: "/" } };
 
-function PageInner() {
-  const searchParams = useSearchParams();
-  const [data, setData] = useState(emptyState);
-  const [turnoutPct, setTurnoutPct] = useState(DEFAULT_TURNOUT_PCT);
-  const [weights, setWeights] = useState(DEFAULT_WEIGHTS);
-  const [selected, setSelected] = useState("LA");
-  const [paint, setPaint] = useState(null);
-  const [view, setView] = useState("leader");
-  const [ready, setReady] = useState(false);
-  const captureRef = useRef(null);
-
-  // A shared link (?s=...) always wins over anything saved locally.
-  useEffect(() => {
-    const shared = searchParams.get("s");
-    const fromLink = shared ? decodeScenario(shared) : null;
-    if (fromLink) {
-      setData(fromLink.data);
-      setTurnoutPct(fromLink.turnoutPct);
-      setReady(true);
-      return;
-    }
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) {
-        const saved = JSON.parse(raw);
-        if (saved.data) setData({ ...emptyState(), ...saved.data });
-        if (saved.turnoutPct) setTurnoutPct(saved.turnoutPct);
-        if (saved.weights) setWeights({ ...DEFAULT_WEIGHTS, ...saved.weights });
-      }
-    } catch {}
-    setReady(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (ready) localStorage.setItem(KEY, JSON.stringify({ data, turnoutPct, weights }));
-  }, [data, turnoutPct, weights, ready]);
-
-  const results = useMemo(() => computeResults(data, turnoutPct), [data, turnoutPct]);
-  const unit = UNITS.find((u) => u.code === selected);
-  const entry = data[selected];
-
-  const patch = (code, fn) => setData((d) => ({ ...d, [code]: fn(d[code]) }));
-
-  const selectOrPaint = (code) => {
-    setSelected(code);
-    if (paint) {
-      patch(code, (e) => (paint.pct < 33 ? setSecondShare(e, paint.partyId, paint.pct) : setLandslide(e, paint.partyId, paint.pct)));
-    }
-  };
-
+// The map is interactive (client-side). The text below it is rendered on the
+// server so search engines can read what the page is about.
+export default function HomePage() {
   return (
-    <main className="app">
-      <header className="masthead">
-        <h1>Nigeria Election Map</h1>
+    <>
+      <MapApp />
+      <section className="home-intro" aria-labelledby="home-intro-title">
+        <h2 id="home-intro-title">Predict Nigeria's 2027 presidential election</h2>
         <p>
-          To win in the first round a candidate needs the most votes and at least 25% in 24 of the 37 units
-          (36 states and the FCT). Votes are weighted by each state's registered voters (INEC, 2023).
+          Nigerians vote for president on {ELECTION_DATE_TEXT}. electionmap.ng lets you play out the result yourself:
+          click a state, choose who wins it and by how much, and watch the national count update. The map applies the
+          real constitutional rule, so a candidate only wins in the first round with the most votes nationally and at
+          least 25% of the vote in 24 of the 37 states and the FCT.
         </p>
-        <Verdict status={results.status} />
-      </header>
-
-      {/* The main way to build a scenario: pick a party + share, then tap states below. */}
-      <PaintTool armed={paint} onArm={setPaint} />
-
-      {/* Everything you need for one simulation, in view together. */}
-      <div className="cockpit">
-        <div className="col-map" ref={captureRef}>
-          <NigeriaMap results={results} selected={selected} onSelect={selectOrPaint} view={view} />
+        <p>
+          Votes are weighted by each state's registered voters, so Lagos and Kano count for more than Bayelsa or Ekiti.
+          When you finish, share your map on WhatsApp, X or Facebook and challenge your friends to beat it.
+        </p>
+        <div className="intro-links">
+          <Link href="/paths-to-victory">Every path to victory in 2027</Link>
+          <Link href="/2023-election-results">2023 results, state by state</Link>
+          <Link href="/25-percent-rule">How the 25% rule works</Link>
         </div>
-
-        <div className="col-editor">
-          <StatePanel
-            unit={unit}
-            entry={entry}
-            registered={REGISTERED_VOTERS[selected]}
-            votes={votesCast(selected, entry, turnoutPct)}
-            nationalPct={turnoutPct}
-            onShare={(pid, v) => patch(selected, (e) => withShare(e, pid, v))}
-            onTurnoutPct={(v) => patch(selected, (e) => ({ ...e, turnoutPct: v }))}
-            onClear={() => patch(selected, blank)}
-            results={results}
-            onClearAll={() => setData(emptyState())}
-          />
-        </div>
-      </div>
-
-      <Ranking results={results} view={view} onView={setView} />
-
-      {/* Secondary tools -- share, save, scenario builders. Scroll for these. */}
-      <div className="extras">
-        <ShareBar data={data} turnoutPct={turnoutPct} status={results.status} captureRef={captureRef} />
-        <SaveBar
-          data={data}
-          turnoutPct={turnoutPct}
-          onLoad={(decoded) => {
-            setData(decoded.data);
-            setTurnoutPct(decoded.turnoutPct);
-          }}
-        />
-        <Tools
-          turnoutPct={turnoutPct}
-          onTurnoutPct={setTurnoutPct}
-          weights={weights}
-          onWeights={setWeights}
-          onZone={(zone, pid) =>
-            setData((d) => {
-              const next = { ...d };
-              UNITS.filter((u) => u.zone === zone).forEach((u) => {
-                next[u.code] = { ...d[u.code], shares: quickShares(pid) };
-              });
-              return next;
-            })
-          }
-          onRandom={() =>
-            setData((d) => {
-              const scenario = randomScenario(weights);
-              const next = { ...d };
-              UNITS.forEach((u) => (next[u.code] = { ...d[u.code], shares: scenario[u.code] }));
-              return next;
-            })
-          }
-          onReset={() => setData(emptyState())}
-        />
-      </div>
-    </main>
-  );
-}
-
-export default function Page() {
-  return (
-    <Suspense fallback={null}>
-      <PageInner />
-    </Suspense>
+      </section>
+    </>
   );
 }
