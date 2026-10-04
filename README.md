@@ -92,3 +92,13 @@ After deploying:
    google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
 
 Party slots on the map are now APC, ADC, NDC (INEC final list, Sept 2026).
+
+## Personalised share previews (v7)
+- `app/og/route.js` draws a 1200x630 picture of a shared scenario: `/og?s=CODE`.
+- `app/page.js` gives every shared link (`/?s=CODE`) its own title, `og:url` and preview image.
+- `lib/scenarioImage.js` holds the shared helpers (decode, headline, map SVG).
+- Test a link in Facebook's Sharing Debugger: https://developers.facebook.com/tools/debug/
+
+## Icons (v8)
+- `app/favicon.ico`, `app/icon.svg`, `app/apple-icon.png`: browser tab and iPhone icons (Next.js picks them up automatically).
+- `app/manifest.js` + `public/icon-192.png`, `public/icon-512.png`: Android "Add to home screen".

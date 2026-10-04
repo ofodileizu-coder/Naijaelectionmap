@@ -57,3 +57,5 @@ export default function RootLayout({ children }) {
     </ClerkProvider>
   );
 }
+
+export const viewport = { themeColor: "#10261c" };

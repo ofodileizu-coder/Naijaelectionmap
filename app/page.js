@@ -1,8 +1,33 @@
 import Link from "next/link";
 import MapApp from "../components/MapApp";
-import { ELECTION_DATE_TEXT } from "../lib/site";
+import { ELECTION_DATE_TEXT, SITE_NAME } from "../lib/site";
+import { resultsFromCode, headlineFor } from "../lib/scenarioImage";
 
-export const metadata = { alternates: { canonical: "/" } };
+// A shared link (/?s=CODE) gets its own title and a preview picture of that
+// person's map, so Facebook, WhatsApp and X show their actual prediction.
+export function generateMetadata({ searchParams }) {
+  const base = { alternates: { canonical: "/" } };
+  const code = typeof searchParams?.s === "string" ? searchParams.s : null;
+  const results = resultsFromCode(code);
+  if (!results) return base;
+
+  const title = `My prediction: ${headlineFor(results.status)}`;
+  const description = "Do you agree? Build your own Nigeria 2027 election map at electionmap.ng and share it.";
+  const image = { url: `/og?s=${encodeURIComponent(code)}`, width: 1200, height: 630, alt: title };
+  return {
+    ...base,
+    openGraph: {
+      type: "website",
+      siteName: SITE_NAME,
+      locale: "en_NG",
+      url: `/?s=${encodeURIComponent(code)}`,
+      title,
+      description,
+      images: [image],
+    },
+    twitter: { card: "summary_large_image", title, description, images: [image.url] },
+  };
+}
 
 // The map is interactive (client-side). The text below it is rendered on the
 // server so search engines can read what the page is about.

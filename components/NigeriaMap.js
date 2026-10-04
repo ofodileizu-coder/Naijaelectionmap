@@ -101,6 +101,14 @@ export default function NigeriaMap({ results, selected, onSelect, view }) {
             </g>
           );
         })}
+        <g className="wm" aria-hidden="true" pointerEvents="none">
+          <text x="592" y="392" textAnchor="end" fill="#10261c" fillOpacity="0.62" fontSize="40" fontWeight="700" fontFamily="system-ui, -apple-system, 'Segoe UI', sans-serif" letterSpacing="-0.5">
+            electionmap.ng
+          </text>
+          <text x="592" y="422" textAnchor="end" fill="#55665c" fillOpacity="0.8" fontSize="20" fontFamily="system-ui, -apple-system, 'Segoe UI', sans-serif">
+            Make your own 2027 map
+          </text>
+        </g>
       </svg>
       <p className="legend">
         {view === "leader"
