@@ -1,7 +1,7 @@
 import Link from "next/link";
 import MapApp from "../components/MapApp";
-import { ELECTION_DATE_TEXT, SITE_NAME } from "../lib/site";
-import { resultsFromCode, headlineFor } from "../lib/scenarioImage";
+import { ELECTION_DATE_TEXT } from "../lib/site";
+import { shareMetadata } from "../lib/shareMeta";
 
 // Render on every request so a shared link's ?s= code reaches generateMetadata.
 // (Without this, Next.js can pre-build the homepage once with the default preview.)
@@ -10,27 +10,9 @@ export const dynamic = "force-dynamic";
 // A shared link (/?s=CODE) gets its own title and a preview picture of that
 // person's map, so Facebook, WhatsApp and X show their actual prediction.
 export function generateMetadata({ searchParams }) {
-  const base = { alternates: { canonical: "/" } };
   const code = typeof searchParams?.s === "string" ? searchParams.s : null;
-  const results = resultsFromCode(code);
-  if (!results) return base;
-
-  const title = `My prediction: ${headlineFor(results.status)}`;
-  const description = "Do you agree? Build your own Nigeria 2027 election map at electionmap.ng and share it.";
-  const image = { url: `/og?s=${encodeURIComponent(code)}`, width: 1800, height: 945, alt: title };
-  return {
-    ...base,
-    openGraph: {
-      type: "website",
-      siteName: SITE_NAME,
-      locale: "en_NG",
-      url: `/?s=${encodeURIComponent(code)}`,
-      title,
-      description,
-      images: [image],
-    },
-    twitter: { card: "summary_large_image", title, description, images: [image.url] },
-  };
+  const shared = code ? shareMetadata(code, `/?s=${encodeURIComponent(code)}`) : null;
+  return shared ? { ...shared, robots: undefined } : { alternates: { canonical: "/" } };
 }
 
 // The map is interactive (client-side). The text below it is rendered on the

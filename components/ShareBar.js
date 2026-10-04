@@ -63,9 +63,8 @@ export default function ShareBar({ data, turnoutPct, status, captureRef }) {
 
   const buildLink = () => {
     const code = encodeScenario(data, turnoutPct);
-    const url = new URL(window.location.href);
-    url.search = `?s=${code}`;
-    return url.toString();
+    // Short /p/ links carry their own preview picture on Facebook, WhatsApp and X.
+    return `${window.location.origin}/p/${code}`;
   };
 
   const copyLink = async () => {
