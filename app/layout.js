@@ -23,6 +23,7 @@ export const metadata = {
     type: "website",
     siteName: SITE_NAME,
     locale: "en_NG",
+    url: "/",
     title: "Nigeria 2027 Election Map: Predict Who Wins",
     description: DESCRIPTION,
   },

@@ -13,7 +13,7 @@ export function generateMetadata({ searchParams }) {
 
   const title = `My prediction: ${headlineFor(results.status)}`;
   const description = "Do you agree? Build your own Nigeria 2027 election map at electionmap.ng and share it.";
-  const image = { url: `/og?s=${encodeURIComponent(code)}`, width: 1200, height: 630, alt: title };
+  const image = { url: `/og?s=${encodeURIComponent(code)}`, width: 1800, height: 945, alt: title };
   return {
     ...base,
     openGraph: {
