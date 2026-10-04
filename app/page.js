@@ -3,6 +3,10 @@ import MapApp from "../components/MapApp";
 import { ELECTION_DATE_TEXT, SITE_NAME } from "../lib/site";
 import { resultsFromCode, headlineFor } from "../lib/scenarioImage";
 
+// Render on every request so a shared link's ?s= code reaches generateMetadata.
+// (Without this, Next.js can pre-build the homepage once with the default preview.)
+export const dynamic = "force-dynamic";
+
 // A shared link (/?s=CODE) gets its own title and a preview picture of that
 // person's map, so Facebook, WhatsApp and X show their actual prediction.
 export function generateMetadata({ searchParams }) {
