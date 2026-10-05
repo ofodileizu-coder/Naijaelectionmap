@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ContentPage from "../../../components/ContentPage";
 import ResultBars from "../../../components/ResultBars";
+import StateMaps from "../../../components/StateMaps";
 import { pageMeta } from "../../../lib/site";
 import { STATES_2023, stateBySlug, statesInZone, TURNOUT_2023_PCT } from "../../../lib/results2023";
 import { THRESHOLD_PCT } from "../../../lib/data";
@@ -41,6 +42,26 @@ function listNames(names) {
 
 function capitalise(t) {
   return t.charAt(0).toUpperCase() + t.slice(1);
+}
+
+const fmt = (n) => n.toLocaleString("en-NG");
+const PLACES = ["1st", "2nd", "3rd"];
+
+// One-sentence summary written from the numbers.
+function summary(s, name) {
+  const [w, r, t] = s.rows;
+  const lead = w.votes - r.votes;
+  const how =
+    s.marginPts < 3 ? "narrowly" : s.marginPts < 10 ? "clearly" : s.marginPts < 25 ? "comfortably" : "by a landslide";
+  const turnout =
+    s.turnoutApprox < TURNOUT_2023_PCT - 2
+      ? "below the national average"
+      : s.turnoutApprox > TURNOUT_2023_PCT + 2
+      ? "above the national average"
+      : "close to the national average";
+  return `${w.name} won ${name} ${how}, ${s.marginPts.toFixed(1)} points (${fmt(lead)} votes) ahead of ${r.name}, with ${
+    t.name
+  } third. About ${s.turnoutApprox}% of registered voters turned out for the four leading candidates, ${turnout} of ${TURNOUT_2023_PCT}%.`;
 }
 
 function raceCharacter(s) {
@@ -85,6 +106,47 @@ export default function StatePage({ params }) {
         "en-NG"
       )} registered voters in 2023, ${rank === 1 ? "the largest" : `the ${ordinal(rank)} largest`} electorate of the 37 units and ${share}% of the national register.`}
     >
+      <section className="state-glance" aria-label="2023 at a glance">
+        <StateMaps
+          code={s.code}
+          name={name === "The FCT" ? "The FCT" : name}
+          color={s.winner.color}
+          winnerLabel={`${s.winner.name} (${s.winner.party})`}
+        />
+        <div className="glance-side">
+          <p className="glance-summary">{summary(s, name === "The FCT" ? "the FCT" : name)}</p>
+          <ol className="podium">
+            {s.rows.slice(0, 3).map((r, i) => (
+              <li key={r.id} className={`podium-row place-${i + 1}`}>
+                <span className="podium-place">{PLACES[i]}</span>
+                <span className="podium-dot" style={{ background: r.color }} aria-hidden="true" />
+                <span className="podium-name">
+                  {r.name} <small>{r.party}</small>
+                </span>
+                <span className="podium-num">
+                  <strong>{r.pct.toFixed(1)}%</strong>
+                  <small>{fmt(r.votes)} votes</small>
+                </span>
+              </li>
+            ))}
+          </ol>
+          <dl className="glance-facts">
+            <div>
+              <dt>Registered voters</dt>
+              <dd>{fmt(s.registered)}</dd>
+            </div>
+            <div>
+              <dt>Turnout (top four)</dt>
+              <dd>{s.turnoutApprox}%</dd>
+            </div>
+            <div>
+              <dt>Winning margin</dt>
+              <dd>{s.marginPts.toFixed(1)} pts</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
       <h2>2023 result</h2>
       <ResultBars
         rows={s.rows}

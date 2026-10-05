@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { UNITS, REGISTERED_VOTERS, DEFAULT_TURNOUT_PCT, DEFAULT_WEIGHTS } from "../lib/data";
 import {
   emptyState,
@@ -13,6 +13,7 @@ import {
   setSecondShare,
 } from "../lib/engine";
 import { decodeScenario } from "../lib/share";
+import { slugFor } from "../lib/results2023";
 import NigeriaMap from "../components/NigeriaMap";
 import Ranking from "../components/Ranking";
 import Verdict from "../components/Verdict";
@@ -28,6 +29,7 @@ const blank = (entry) => ({ ...entry, shares: Object.fromEntries(Object.keys(ent
 
 function PageInner() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [data, setData] = useState(emptyState);
   const [turnoutPct, setTurnoutPct] = useState(DEFAULT_TURNOUT_PCT);
   const [weights, setWeights] = useState(DEFAULT_WEIGHTS);
@@ -85,6 +87,11 @@ function PageInner() {
       return next;
     });
 
+  // Double-click a state (or use the link in the state panel) to open its 2023 results page.
+  // The map is saved automatically, so nothing is lost when the visitor comes back.
+  const stateHref = (code) => `/states/${slugFor(UNITS.find((u) => u.code === code))}`;
+  const openState = (code) => router.push(stateHref(code));
+
   // From the countdown banner: arm the paint tool for that candidate and jump to the map.
   const pickCandidate = (partyId) => {
     setPaint({ partyId, pct: 75 });
@@ -111,7 +118,7 @@ function PageInner() {
       {/* Everything you need for one simulation, in view together. */}
       <div className="cockpit">
         <div className="col-map" ref={captureRef}>
-          <NigeriaMap results={results} selected={selected} onSelect={selectOrPaint} view={view} />
+          <NigeriaMap results={results} selected={selected} onSelect={selectOrPaint} onOpen={openState} view={view} />
         </div>
 
         <div className="col-editor">
@@ -125,6 +132,7 @@ function PageInner() {
             onTurnoutPct={(v) => patch(selected, (e) => ({ ...e, turnoutPct: v }))}
             onClear={() => patch(selected, blank)}
             results={results}
+            stateHref={stateHref(selected)}
             onClearAll={() => setData(emptyState())}
           />
         </div>

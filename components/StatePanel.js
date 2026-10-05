@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { ZONES, REQUIRED_UNITS } from "../lib/data";
 
 const fmt = (n) => Math.round(n).toLocaleString("en-NG");
@@ -14,6 +15,7 @@ export default function StatePanel({
   onClear,
   onClearAll,
   results,
+  stateHref,
 }) {
   const num = (v) => (v === "" ? 0 : parseFloat(v));
 
@@ -23,6 +25,11 @@ export default function StatePanel({
         <h2>{unit.name}</h2>
         <span className="zone">{ZONES[unit.zone]}</span>
       </div>
+      {stateHref && (
+        <Link className="state-link" href={stateHref}>
+          See how {unit.code === "FC" ? "the FCT" : unit.name} voted in 2023 &rarr;
+        </Link>
+      )}
 
       <dl className="facts">
         <div>

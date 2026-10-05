@@ -365,3 +365,34 @@ button, input { font: inherit; color: inherit; }
   .cd-pick { flex: 1 1 100%; justify-content: flex-start; padding: 7px 14px 7px 12px; }
   .cd-actions .btn { flex: 1 1 100%; text-align: center; }
 }
+
+/* Link from the map's state panel to the state's 2023 page */
+.state-link { display: inline-block; margin: -4px 0 12px; font-weight: 600; color: var(--focus); text-decoration: none; }
+.state-link:hover { text-decoration: underline; }
+
+/* State page: maps, podium and quick facts */
+.state-glance { display: grid; grid-template-columns: 1fr; gap: 18px; margin: 8px 0 28px; }
+.state-maps { margin: 0; }
+.state-maps-row { display: grid; grid-template-columns: 1.227fr 1fr; gap: 10px; align-items: stretch; }
+.state-maps svg { width: 100%; height: auto; background: var(--panel); border-radius: 10px; padding: 6px; }
+.state-maps figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+.glance-summary { margin: 0 0 14px; font-size: 1.05rem; line-height: 1.5; }
+.podium { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 8px; }
+.podium-row {
+  display: grid; grid-template-columns: 38px 14px 1fr auto; align-items: center; gap: 10px;
+  background: var(--panel); border-radius: 10px; padding: 10px 14px;
+}
+.podium-row.place-1 { outline: 2px solid var(--ink); }
+.podium-place { font-weight: 800; font-size: 0.95rem; }
+.podium-dot { width: 14px; height: 14px; border-radius: 50%; }
+.podium-name { font-weight: 600; }
+.podium-name small { color: var(--muted); font-weight: 700; margin-left: 4px; }
+.podium-num { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.podium-num small { color: var(--muted); font-size: 0.8rem; }
+.glance-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; }
+.glance-facts div { background: var(--panel); border-radius: 10px; padding: 8px 12px; }
+.glance-facts dt { font-size: 0.78rem; color: var(--muted); }
+.glance-facts dd { margin: 2px 0 0; font-weight: 700; font-size: 1.05rem; }
+@media (max-width: 520px) {
+  .glance-facts { grid-template-columns: 1fr 1fr; }
+}

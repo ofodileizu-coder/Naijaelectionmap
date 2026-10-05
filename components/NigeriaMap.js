@@ -40,7 +40,7 @@ function describe(unit, info, view) {
   return { style, cls: "hatch", label: `${Math.round(s)}`, aria: `${unit.name}: ${view} ${s}%, below 25%`, minor: minorDots(info) };
 }
 
-export default function NigeriaMap({ results, selected, onSelect, view }) {
+export default function NigeriaMap({ results, selected, onSelect, onOpen, view }) {
   const activate = (code) => onSelect(code);
   return (
     <div>
@@ -66,6 +66,7 @@ export default function NigeriaMap({ results, selected, onSelect, view }) {
               className={`state ${d.cls}${selected === u.code ? " sel" : ""}`}
               style={d.style}
               onClick={() => activate(u.code)}
+              onDoubleClick={() => onOpen?.(u.code)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
