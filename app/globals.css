@@ -315,3 +315,53 @@ button, input { font: inherit; color: inherit; }
 .footer-cols { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
 .footer-brand { font-family: var(--font-display), sans-serif; font-weight: 800; margin: 0; }
 @media (max-width: 720px) { .footer-cols { grid-template-columns: 1fr 1fr; } .footer-cols > div:first-child { grid-column: 1 / -1; } }
+
+/* Countdown + call to action (top of the map page) */
+.countdown {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: center;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 12px;
+  padding: 22px 26px;
+  margin-bottom: 22px;
+}
+.cd-kicker { margin: 0 0 10px; font-size: 0.95rem; color: #c9d6cd; }
+.cd-units { display: flex; gap: 10px; }
+.cd-unit {
+  display: flex; flex-direction: column; align-items: center;
+  min-width: 62px; padding: 8px 6px 6px;
+  background: rgba(255, 255, 255, 0.08); border-radius: 8px;
+}
+.cd-num { font-family: var(--font-display), system-ui, sans-serif; font-size: 2rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.cd-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #c9d6cd; margin-top: 4px; }
+.cd-title { font-size: clamp(1.3rem, 2.6vw, 1.8rem); line-height: 1.15; }
+.cd-sub { margin: 6px 0 14px; color: #c9d6cd; }
+.cd-picks { display: flex; flex-wrap: wrap; gap: 10px; }
+.cd-pick {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: #fff; color: var(--ink);
+  border: 2px solid transparent; border-radius: 999px;
+  padding: 8px 16px 8px 12px; cursor: pointer; font-weight: 600;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.cd-pick:hover { transform: translateY(-1px); border-color: #f2b134; }
+.cd-dot { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+.cd-party { font-size: 0.8rem; color: var(--muted); font-weight: 700; }
+.cd-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.btn.cd-main { background: #f2b134; border-color: #f2b134; color: var(--ink); text-decoration: none; padding: 10px 18px; }
+.btn.cd-main:hover { background: #ffc54d; color: var(--ink); }
+.btn.cd-random { color: #fff; border-color: rgba(255, 255, 255, 0.6); padding: 10px 18px; }
+.btn.cd-random:hover { background: #fff; color: var(--ink); }
+.build-anchor { scroll-margin-top: 12px; }
+
+@media (max-width: 760px) {
+  .countdown { grid-template-columns: 1fr; gap: 16px; padding: 18px 16px; }
+  .cd-units { justify-content: space-between; }
+  .cd-unit { flex: 1; min-width: 0; }
+  .cd-num { font-size: 1.7rem; }
+  .cd-pick { flex: 1 1 100%; justify-content: flex-start; padding: 7px 14px 7px 12px; }
+  .cd-actions .btn { flex: 1 1 100%; text-align: center; }
+}

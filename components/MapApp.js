@@ -21,6 +21,7 @@ import Tools from "../components/Tools";
 import ShareBar from "../components/ShareBar";
 import SaveBar from "../components/SaveBar";
 import PaintTool from "../components/PaintTool";
+import Countdown from "../components/Countdown";
 
 const KEY = "naija-election-map:v3";
 const blank = (entry) => ({ ...entry, shares: Object.fromEntries(Object.keys(entry.shares).map((k) => [k, 0])) });
@@ -76,8 +77,23 @@ function PageInner() {
     }
   };
 
+  const randomMap = () =>
+    setData((d) => {
+      const scenario = randomScenario(weights);
+      const next = { ...d };
+      UNITS.forEach((u) => (next[u.code] = { ...d[u.code], shares: scenario[u.code] }));
+      return next;
+    });
+
+  // From the countdown banner: arm the paint tool for that candidate and jump to the map.
+  const pickCandidate = (partyId) => {
+    setPaint({ partyId, pct: 75 });
+    document.getElementById("build")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <main className="app">
+      <Countdown onPick={pickCandidate} onRandom={randomMap} />
       <header className="masthead">
         <h1>Nigeria 2027 Election Map</h1>
         <p>
@@ -88,7 +104,9 @@ function PageInner() {
       </header>
 
       {/* The main way to build a scenario: pick a party + share, then tap states below. */}
-      <PaintTool armed={paint} onArm={setPaint} />
+      <div id="build" className="build-anchor">
+        <PaintTool armed={paint} onArm={setPaint} />
+      </div>
 
       {/* Everything you need for one simulation, in view together. */}
       <div className="cockpit">
@@ -139,14 +157,7 @@ function PageInner() {
               return next;
             })
           }
-          onRandom={() =>
-            setData((d) => {
-              const scenario = randomScenario(weights);
-              const next = { ...d };
-              UNITS.forEach((u) => (next[u.code] = { ...d[u.code], shares: scenario[u.code] }));
-              return next;
-            })
-          }
+          onRandom={randomMap}
           onReset={() => setData(emptyState())}
         />
       </div>
