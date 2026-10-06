@@ -396,3 +396,27 @@ button, input { font: inherit; color: inherit; }
 @media (max-width: 520px) {
   .glance-facts { grid-template-columns: 1fr 1fr; }
 }
+
+/* Share box: tag line, "feature my map" form */
+.tagline { margin: 12px 0 8px; font-size: 0.95rem; }
+.feature-open { margin-bottom: 4px; }
+.feature-box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 8px 0 6px; }
+.feature-box h3 { margin: 0 0 4px; font-size: 1.05rem; }
+.feature-box .field.stack { margin-top: 10px; }
+.feature-box input[type="text"], .feature-box input:not([type]), .feature-box select {
+  width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; background: #fff; text-align: left;
+}
+.check { display: flex; gap: 10px; align-items: flex-start; margin: 14px 0 10px; font-size: 0.9rem; line-height: 1.4; }
+.check input { margin-top: 3px; width: 18px; height: 18px; flex: none; }
+.feature-error { color: #b42318; font-size: 0.9rem; margin: 6px 0; }
+.feature-thanks { margin: 0; font-weight: 600; }
+.map-counter { margin: 10px 0 0; font-size: 0.95rem; color: #c9d6cd; }
+.map-counter strong { color: #f2b134; font-size: 1.1rem; }
+
+/* Admin page */
+.feature-list { display: grid; gap: 14px; }
+.feature-item { display: grid; grid-template-columns: 300px 1fr; gap: 16px; background: var(--panel); border-radius: 10px; padding: 12px; }
+.feature-item img { width: 100%; border-radius: 8px; display: block; }
+.feature-item p { margin: 0 0 6px; }
+.caption-box { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 0.92rem; user-select: all; }
+@media (max-width: 700px) { .feature-item { grid-template-columns: 1fr; } }

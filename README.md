@@ -102,3 +102,14 @@ Party slots on the map are now APC, ADC, NDC (INEC final list, Sept 2026).
 ## Icons (v8)
 - `app/favicon.ico`, `app/icon.svg`, `app/apple-icon.png`: browser tab and iPhone icons (Next.js picks them up automatically).
 - `app/manifest.js` + `public/icon-192.png`, `public/icon-512.png`: Android "Add to home screen".
+
+## Map counter and "Feature my map" (v12)
+Needs a free Upstash Redis database connected in Vercel:
+1. Vercel project -> Storage -> Create Database -> Upstash (Redis) -> free plan -> Connect to this project.
+   This adds KV_REST_API_URL and KV_REST_API_TOKEN (or UPSTASH_REDIS_REST_URL / _TOKEN) automatically.
+2. Vercel project -> Settings -> Environment Variables -> add ADMIN_KEY (a long secret word).
+3. Redeploy. Private admin page: https://www.electionmap.ng/admin?key=YOUR_ADMIN_KEY
+- `/api/track` counts each shared map once (map code only, no personal data).
+- `/api/stats` gives public totals; the homepage counter appears once 50+ maps are shared.
+- `/api/feature` stores opt-in submissions (handle, platform, consent, time), newest 2,000 kept.
+- Social handle and hashtag are set in `lib/site.js` (SOCIAL_HANDLE, HASHTAG).

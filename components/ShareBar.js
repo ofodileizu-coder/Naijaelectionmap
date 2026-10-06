@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import FeatureForm from "./FeatureForm";
+import { SOCIAL_HANDLE, HASHTAG } from "../lib/site";
 import { encodeScenario, captionFor } from "../lib/share";
 
 function shortVerdict(status) {
@@ -56,6 +58,18 @@ function brandImage(shot, caption) {
   return out;
 }
 
+// Anonymous count of maps shared (fire-and-forget; never blocks the share itself).
+function track(code) {
+  try {
+    fetch("/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {}
+}
+
 export default function ShareBar({ data, turnoutPct, status, captureRef }) {
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -63,6 +77,7 @@ export default function ShareBar({ data, turnoutPct, status, captureRef }) {
 
   const buildLink = () => {
     const code = encodeScenario(data, turnoutPct);
+    track(code);
     // Short /p/ links carry their own preview picture on Facebook, WhatsApp and X.
     return `${window.location.origin}/p/${code}`;
   };
@@ -95,6 +110,7 @@ export default function ShareBar({ data, turnoutPct, status, captureRef }) {
   const downloadImage = async () => {
     if (!captureRef?.current) return;
     setBusy(true);
+    track(encodeScenario(data, turnoutPct));
     try {
       const { default: html2canvas } = await import("html2canvas");
       const shot = await html2canvas(captureRef.current, { backgroundColor: "#e6ebe2", scale: 2 });
@@ -135,6 +151,11 @@ export default function ShareBar({ data, turnoutPct, status, captureRef }) {
           {busy ? "Preparing image..." : "Download as image"}
         </button>
       </div>
+      <p className="tagline">
+        Tag <strong>{SOCIAL_HANDLE}</strong> or use <strong>{HASHTAG}</strong> when you post, and we may share your
+        map.
+      </p>
+      <FeatureForm code={() => encodeScenario(data, turnoutPct)} hasMap={status?.kind !== "empty"} />
       <p className="hint tight">
         TikTok doesn't accept a pre-filled link like this. Use "Copy link", then paste it into your TikTok bio or
         caption.

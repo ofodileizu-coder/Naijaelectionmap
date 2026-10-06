@@ -19,7 +19,18 @@ export default function PrivacyPage() {
       <h2>Using the map without an account</h2>
       <p>
         You can build, view and share maps without signing in. The map you build stays in your browser. When you share
-        a map, your choices are packed into the link itself; we do not store them on our servers.
+        a map, your choices are packed into the link itself. To count how many maps are made and which results people
+        predict, we also store a copy of each shared map's choices on our servers. This copy contains no name, email or
+        other personal details, and we publish only totals.
+      </p>
+
+      <h2>Featured maps</h2>
+      <p>
+        If you use &quot;Get your map featured&quot;, we store your map, the name or social handle you type, the
+        platform you choose, your consent and the time you sent it. We use this only to repost your map on our website
+        and social media with credit to you. This is based on your consent, which you give by ticking the box. You can
+        withdraw it at any time by emailing us, and we will delete your entry and stop using your map. These entries are
+        held by our storage provider, Upstash, and kept for no longer than 12 months.
       </p>
 
       <h2>Accounts</h2>

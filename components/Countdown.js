@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { PARTIES } from "../lib/data";
 import { ELECTION_DATE_TEXT, ELECTION_START_ISO, TICKETS } from "../lib/site";
+import MapCounter from "./MapCounter";
 
 const START = new Date(ELECTION_START_ISO).getTime();
 const colorOf = (id) => PARTIES.find((p) => p.id === id)?.color || "#7D857F";
@@ -50,6 +51,7 @@ export default function Countdown({ onPick, onRandom }) {
             {unit(left?.secs ?? 0, "secs")}
           </div>
         )}
+        <MapCounter />
       </div>
 
       <div className="cd-cta">
