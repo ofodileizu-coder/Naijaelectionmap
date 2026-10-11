@@ -73,6 +73,7 @@ function track(code) {
 export default function ShareBar({ data, turnoutPct, status, captureRef }) {
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [fbHint, setFbHint] = useState(false);
   const canShare = typeof navigator !== "undefined" && !!navigator.share;
 
   const buildLink = () => {
@@ -101,10 +102,19 @@ export default function ShareBar({ data, turnoutPct, status, captureRef }) {
     const text = captionFor(status);
     const targets = {
       x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      facebook: `https://www.facebook.com/sharer.php?u=${encodeURIComponent(url)}`,
       whatsapp: `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`,
     };
-    window.open(targets[kind], "_blank", "noopener,noreferrer,width=600,height=500");
+    // Open in a normal new tab rather than a sized pop-up: pop-ups get blocked or
+    // fail to load on many phones and data networks. If the tab can't open at all,
+    // fall back to this tab so the share still happens.
+    const win = window.open(targets[kind], "_blank", "noopener,noreferrer");
+    if (!win) window.location.href = targets[kind];
+    if (kind === "facebook") {
+      try { navigator.clipboard?.writeText(url); } catch {}
+      setFbHint(true);
+      setTimeout(() => setFbHint(false), 8000);
+    }
   };
 
   const downloadImage = async () => {
@@ -143,6 +153,11 @@ export default function ShareBar({ data, turnoutPct, status, captureRef }) {
           Share to WhatsApp
         </button>
       </div>
+      {fbHint && (
+        <p className="hint tight" role="status">
+          Facebook not loading? Your link is already copied: open the Facebook app, start a new post and paste it.
+        </p>
+      )}
       <div className="zonerow">
         <button type="button" className="btn ghost" onClick={copyLink}>
           {copied ? "Link copied" : "Copy link"}

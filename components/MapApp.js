@@ -7,7 +7,6 @@ import {
   computeResults,
   withShare,
   quickShares,
-  randomScenario,
   votesCast,
   setLandslide,
   setSecondShare,
@@ -79,14 +78,6 @@ function PageInner() {
     }
   };
 
-  const randomMap = () =>
-    setData((d) => {
-      const scenario = randomScenario(weights);
-      const next = { ...d };
-      UNITS.forEach((u) => (next[u.code] = { ...d[u.code], shares: scenario[u.code] }));
-      return next;
-    });
-
   // Double-click a state (or use the link in the state panel) to open its 2023 results page.
   // The map is saved automatically, so nothing is lost when the visitor comes back.
   const stateHref = (code) => `/states/${slugFor(UNITS.find((u) => u.code === code))}`;
@@ -100,12 +91,12 @@ function PageInner() {
 
   return (
     <main className="app">
-      <Countdown onPick={pickCandidate} onRandom={randomMap} />
+      <Countdown onPick={pickCandidate} />
       <header className="masthead">
         <h1>Nigeria 2027 Election Map</h1>
         <p>
           To win in the first round a candidate needs the most votes and at least 25% in 24 of the 37 units
-          (36 states and the FCT). Votes are weighted by each state's registered voters (INEC, 2023).
+          (36 states and the FCT). Votes are weighted by each state's registered voters on INEC's 2027 register (103.4 million).
         </p>
         <Verdict status={results.status} />
       </header>
@@ -154,8 +145,6 @@ function PageInner() {
         <Tools
           turnoutPct={turnoutPct}
           onTurnoutPct={setTurnoutPct}
-          weights={weights}
-          onWeights={setWeights}
           onZone={(zone, pid) =>
             setData((d) => {
               const next = { ...d };
@@ -165,7 +154,6 @@ function PageInner() {
               return next;
             })
           }
-          onRandom={randomMap}
           onReset={() => setData(emptyState())}
         />
       </div>

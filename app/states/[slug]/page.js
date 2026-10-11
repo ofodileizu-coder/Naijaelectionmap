@@ -132,8 +132,16 @@ export default function StatePage({ params }) {
           </ol>
           <dl className="glance-facts">
             <div>
-              <dt>Registered voters</dt>
+              <dt>Registered voters (2023)</dt>
               <dd>{fmt(s.registered)}</dd>
+            </div>
+            <div>
+              <dt>Registered voters (2027)</dt>
+              <dd>
+                {s.registered2027Confirmed ? "" : "~"}
+                {fmt(s.registered2027)}
+                {!s.registered2027Confirmed && <small> est.</small>}
+              </dd>
             </div>
             <div>
               <dt>Turnout (top four)</dt>

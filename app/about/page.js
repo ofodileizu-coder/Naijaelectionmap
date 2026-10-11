@@ -63,8 +63,10 @@ export default function AboutPage() {
       <h2>Where the numbers come from</h2>
       <ul>
         <li>
-          Registered voters per state come from INEC's final register for the 2023 general election (93,469,008
-          voters). We will update them when INEC publishes its final register for 2027.
+          The map uses INEC's register for 2027: 103,428,715 voters, announced in October 2026. INEC has published
+          the figures for the largest states, the FCT, Bayelsa and Ekiti; for the other states the map uses an estimate
+          (their 2023 figure grown so the national total adds up) until INEC releases the full list. The 2023 results
+          pages use INEC's final 2023 register (93,469,008 voters).
         </li>
         <li>
           Past results come from INEC's official declarations for the 2023 presidential election. You can browse them on

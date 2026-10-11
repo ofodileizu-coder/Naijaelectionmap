@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ZONES, REQUIRED_UNITS } from "../lib/data";
+import { ZONES, REQUIRED_UNITS, REGISTERED_VOTERS_2023, REGISTER_2027_CONFIRMED } from "../lib/data";
 
 const fmt = (n) => Math.round(n).toLocaleString("en-NG");
 
@@ -33,8 +33,14 @@ export default function StatePanel({
 
       <dl className="facts">
         <div>
-          <dt>Registered voters</dt>
-          <dd>{fmt(registered)}</dd>
+          <dt>Registered voters (2027)</dt>
+          <dd>
+            {REGISTER_2027_CONFIRMED.has(unit.code) ? "" : "~"}
+            {fmt(registered)}
+            <small className="facts-note">
+              {REGISTER_2027_CONFIRMED.has(unit.code) ? "INEC" : "estimate"} · 2023: {fmt(REGISTERED_VOTERS_2023[unit.code])}
+            </small>
+          </dd>
         </div>
         <div>
           <dt>Votes cast</dt>

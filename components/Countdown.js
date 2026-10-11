@@ -20,7 +20,7 @@ function timeLeft(now) {
 
 // Countdown to election day plus the main call to action:
 // tap a candidate to start colouring states for them, or roll a random map.
-export default function Countdown({ onPick, onRandom }) {
+export default function Countdown({ onPick }) {
   const [left, setLeft] = useState(null); // null until mounted, so server and browser HTML match
 
   useEffect(() => {
@@ -68,9 +68,6 @@ export default function Countdown({ onPick, onRandom }) {
         </div>
         <div className="cd-actions">
           <a className="btn cd-main" href="#build">Make my prediction</a>
-          <button type="button" className="btn ghost cd-random" onClick={onRandom}>
-            Surprise me: random map
-          </button>
         </div>
       </div>
     </section>
